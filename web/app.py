@@ -13,6 +13,7 @@ api = Api(app)
 
 
 api.add_resource(resources.Register, '/register')
+api.add_resource(resources.Add, '/add')
 
 if __name__=="__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

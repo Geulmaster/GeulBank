@@ -28,3 +28,21 @@ class Register(Resource):
             "msg": "Successfully signed up for the API"
         }
         return jsonify(retJson)
+
+class Add(Resource):
+    def post(self):
+        postedData = request.get_json()
+        username = postedData["username"]
+        password = postedData["password"]
+        money = postedData["amount"]
+        retJson, error = wrapper.verifyCredentials(username, password)
+        if error:
+            return jsonify(retJson)
+        if money <= 0:
+            return jsonify(wrapper.generatedReturnDictionary(404, "The inserted money amount must be greater than 0"))
+        cash = wrapper.cashWithUser(username)
+        money -= 1 #Transaction fee
+        bank_cash = wrapper.cashWithUser("BANK")
+        wrapper.updateAccount("BANK", bank_cash + 1)
+        wrapper.updateAccount(username, cash + money)
+        return jsonify(wrapper.generatedReturnDictionary(200, f"{cash} jubot added successfully to {username}"))
