@@ -2,8 +2,8 @@ from pymongo import MongoClient
 import bcrypt
 
 def collection():
-    client = MongoClient("mongodb://db:27017")
-    db = client.BankAPI
+    client = MongoClient("mongodb://localhost:27017")
+    db = client["BankAPI"]
     users = db["users"]
     return users
 
