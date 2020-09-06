@@ -14,3 +14,6 @@ api = Api(app)
 users = wrapper.collection()
 
 api.add_resource(resources.Register, '/register')
+
+if __name__=="__main__":
+    app.run(debug=True)
