@@ -46,3 +46,32 @@ class Add(Resource):
         wrapper.updateAccount("BANK", bank_cash + 1)
         wrapper.updateAccount(username, cash + money)
         return jsonify(wrapper.generatedReturnDictionary(200, f"{cash} jubot added successfully to {username}"))
+
+class Transfer(Resource):
+    def post(self):
+        postedData = request.get_json()
+        username = postedData["username"]
+        password = postedData["password"]
+        to = postedData["to"]
+        money = postedData["amount"]
+        retJson, error = wrapper.verifyCredentials(username, password)
+        if error:
+            return jsonify(retJson)
+        cash = wrapper.cashWithUser(username)
+        if cash <= 0:
+            return jsonify(wrapper.generatedReturnDictionary(403, "You are out of money"))
+        if money <= 0:
+            return jsonify(wrapper.generatedReturnDictionary(403, "The inserted amount must be greater than 0"))
+        if not wrapper.user_exists(to):
+            return jsonify(wrapper.generatedReturnDictionary(401, "Recieved username is invalid"))
+        cash_from = wrapper.cashWithUser(username)
+        cash_to = wrapper.cashWithUser(to)
+        bank_cash = wrapper.cashWithUser("BANK")
+        wrapper.updateAccount("BANK", bank_cash + 1)
+        wrapper.updateAccount(to, cash_to + bank_cash - 1)
+        wrapper.updateAccount(username, cash_from - money)
+        retJson = {
+            "status": 200,
+            "msg": f"{money} transfered successfullt to {to}"
+        }
+        return jsonify(wrapper.generatedReturnDictionary(200, f"{money} transfered successfullt to {to}"))
