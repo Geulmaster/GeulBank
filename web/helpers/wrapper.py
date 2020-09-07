@@ -10,7 +10,7 @@ def collection():
 users = collection()
 
 def user_exists(username):
-    if users.find({"Username":username}).count() == 0:
+    if users.find({"username":username}).count() == 0:
         return False
     else:
         return True
@@ -19,8 +19,8 @@ def verifyPW(username, password):
     if not user_exists(username):
         return False
     hashed_pw = users.find({
-        "Username":username
-    })[0]["Password"]
+        "username":username
+    })[0]["password"]
     if bcrypt.hashpw(password.encode('utf8'), hashed_pw) == hashed_pw:
         return True
     else:
@@ -28,13 +28,13 @@ def verifyPW(username, password):
 
 def cashWithUser(username):
     cash = users.find({
-        "Username":username
+        "username":username
     })[0]["Own"]
     return cash
 
 def debtWithUser(username):
     debt = users.find({
-        "Username":username
+        "username":username
     })[0]["Debt"]
     return debt
 
@@ -47,15 +47,15 @@ def generatedReturnDictionary(status, msg):
 
 def verifyCredentials(username, password):
     if not user_exists(username):
-        return generatedReturnDictionary(401, "Invalid Username"), True
+        return generatedReturnDictionary(401, "Invalid username"), True
     correct_pw = verifyPW(username, password)
     if not correct_pw:
-        return generatedReturnDictionary(402, "Incorrect Password"), True
+        return generatedReturnDictionary(402, "Incorrect password"), True
     return None, False
 
 def updateAccount(username, balance):
     users.update({
-        "Username": username
+        "username": username
     },{
         "$set":{
             "Own": balance
@@ -64,7 +64,7 @@ def updateAccount(username, balance):
 
 def updateDebt(username, balance):
     users.update({
-        "Username": username
+        "username": username
     },{
         "$set":{
             "Debt": balance

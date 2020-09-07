@@ -75,3 +75,52 @@ class Transfer(Resource):
             "msg": f"{money} transfered successfullt to {to}"
         }
         return jsonify(wrapper.generatedReturnDictionary(200, f"{money} transfered successfullt to {to}"))
+
+class Balance(Resource):
+    def post(self):
+        postedData = request.get_json()
+        username = postedData["username"]
+        password = postedData["password"]
+        retJson, error = wrapper.verifyCredentials(username, password)
+        if error:
+            return jsonify(retJson)
+        retJson = users.find({
+            "username": username
+        },{
+            "password": 0,
+            "_id": 0
+        })[0]
+        return jsonify(retJson)
+
+class TakeLoan(Resource):
+    def post(self):
+        postedData = request.get_json()
+        username = postedData["username"]
+        password = postedData["password"]
+        money = postedData["amount"]
+        retJson, error = wrapper.verifyCredentials(username, password)
+        if error:
+            return jsonify(retJson)
+        cash = wrapper.cashWithUser(username)
+        debt = wrapper.debtWithUser(username)
+        wrapper.updateAccount(username, cash + money)
+        wrapper.updateDebt(username, debt + money)
+        return jsonify(wrapper.generatedReturnDictionary(200, f"{cash} Added to {username}"))
+
+class PayLoan(Resource):
+    def post(self):
+        postedData = request.get_json()
+        username = postedData["username"]
+        password = postedData["password"]
+        money = postedData["amount"]
+        retJson, error = wrapper.verifyCredentials(username, password)
+        if error:
+            return jsonify(retJson)
+        cash = wrapper.cashWithUser(username)
+        if cash < money:
+            return jsonify(wrapper.generatedReturnDictionary(403, f"Not Enough Money in {username}"))
+        debt = wrapper.debtWithUser(username)
+        wrapper.updateAccount(username, cash - money)
+        wrapper.updateDebt(username, debt - money)
+        return jsonify(wrapper.generatedReturnDictionary(200, "Loan paid"))
+
