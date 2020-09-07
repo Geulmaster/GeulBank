@@ -27,9 +27,7 @@ def verifyPW(username, password):
         return False
 
 def cashWithUser(username):
-    cash = users.find({
-        "username":username
-    })[0]["Own"]
+    cash = users.find({"username":username})[0]["Own"]
     return cash
 
 def debtWithUser(username):
