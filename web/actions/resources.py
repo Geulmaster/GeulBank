@@ -124,3 +124,17 @@ class PayLoan(Resource):
         wrapper.updateDebt(username, debt - money)
         return jsonify(wrapper.generatedReturnDictionary(200, "Loan paid"))
 
+class Leave(Resource):
+    def post(self):
+        postedData = request.get_json()
+        username = postedData["username"]
+        password = postedData["password"]
+        retJson, error = wrapper.verifyCredentials(username, password)
+        if error:
+            return jsonify(retJson)
+        users.delete_one({"username": username})
+        retJson = {
+            "status": 200,
+            "msg": "Successfully removed for the API"
+        }
+        return jsonify(retJson)
