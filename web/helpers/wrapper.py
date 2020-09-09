@@ -1,10 +1,14 @@
 from pymongo import MongoClient
 import bcrypt
 
+from GeulBank.web.helpers import config_reader
+
+credentials = config_reader()["CREDENTIALS"]
+
 def collection():
     client = MongoClient("mongodb://localhost:27017") #geulbank_db_1 instead localhost
-    db = client["BankAPI"]
-    users = db["users"]
+    db = client[credentials["DB"]]
+    users = db[credentials["Collection"]]
     return users
 
 users = collection()
