@@ -72,9 +72,9 @@ class Transfer(Resource):
         wrapper.updateAccount(username, cash_from - money)
         retJson = {
             "status": 200,
-            "msg": f"{money} transfered successfullt to {to}"
+            "msg": f"{money} jubot transfered successfully to {to}"
         }
-        return jsonify(wrapper.generatedReturnDictionary(200, f"{money} transfered successfullt to {to}"))
+        return jsonify(wrapper.generatedReturnDictionary(200, f"{money} jubot transfered successfully to {to}"))
 
 class Balance(Resource):
     def post(self):
