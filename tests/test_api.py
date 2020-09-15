@@ -1,5 +1,15 @@
 from GeulBank.web.app import app
 import unittest
+import string
+from random import *
+
+def random_username():
+    characters = string.ascii_letters \
+        + string.punctuation \
+        + string.digits
+    username = "".join(choice(characters)
+        for x in range(randint(6, 10)))
+    return username
 
 basic_user_info = {"username": "Eyal", "password": "chicaloca"}
 bank_info = {"username": "BANK", "password": "chicaloca"}
@@ -11,11 +21,14 @@ class Tests(unittest.TestCase):
         Register as a new client
         """
         register_credentials = info.copy()
-        register_credentials["username"] = "Eyalp"
+        username = random_username()
+        register_credentials["username"] = username
         with app.test_client(self) as tester:
             req = tester.post('/register', json = register_credentials)
+        print(f"signed up as {username}")
         self.assertEqual(req.get_json(), {'msg': 'Successfully signed up for the API', 'status': 200})
-
+        return username
+        
     def test_add(self, info = basic_user_info):
         """
         Add 500 Jubot to Eyal
