@@ -105,7 +105,7 @@ class TakeLoan(Resource):
         debt = wrapper.debtWithUser(username)
         wrapper.updateAccount(username, cash + money)
         wrapper.updateDebt(username, debt + money)
-        return jsonify(wrapper.generatedReturnDictionary(200, f"{cash} Added to {username}"))
+        return jsonify(wrapper.generatedReturnDictionary(200, f"{money} Added to {username}"))
 
 class PayLoan(Resource):
     def post(self):
