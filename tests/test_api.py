@@ -1,4 +1,5 @@
 from GeulBank.web.app import app
+from GeulBank.web.helpers import wrapper
 import unittest
 import string
 from random import *
@@ -92,6 +93,17 @@ class Tests(unittest.TestCase):
         bank_balance_after = self.test_balance(bank_info)["Own"]
         self.assertEqual(req.status_code, 200)
         self.assertEqual(user_debt_before - user_debt_after, int(transfer_credentials["amount"]))
-        
+
+    def test_leaving(self, info = basic_user_info):
+        """
+        Test unregistration from the API
+        """
+        transfer_credentials = info.copy()
+        with app.test_client(self) as tester:
+            req = tester.post('/leave', json = transfer_credentials)
+        self.assertEqual(req.status_code, 200)
+        assert not wrapper.user_exists(transfer_credentials["username"])
+
+
 if __name__=="__main__":
     unittest.main()
