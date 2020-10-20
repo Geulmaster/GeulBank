@@ -7,6 +7,7 @@ credentials = config_reader()["CREDENTIALS"]
 
 def collection():
     client = MongoClient("mongodb://localhost:27017") #geulbank_db_1 instead localhost
+    # more secure connection: MongoClient('mongodb://username:password@hostname:27017/')
     db = client[credentials["DB"]]
     users = db[credentials["Collection"]]
     return users
