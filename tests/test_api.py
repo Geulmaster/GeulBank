@@ -17,6 +17,7 @@ bank_info = {"username": "BANK", "password": "chicaloca"}
 
 class Tests(unittest.TestCase):
 
+
     def test_register(self, info = basic_user_info):
         """
         Register as a new client
@@ -30,6 +31,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(req.get_json(), {'msg': 'Successfully signed up for the API', 'status': 200})
         return username
 
+
     def test_add(self, info = basic_user_info):
         """
         Add 500 Jubot to Eyal
@@ -40,6 +42,7 @@ class Tests(unittest.TestCase):
             req = tester.post('/add', json = add_credentials)
         self.assertEqual(req.get_json(), {'msg': '499 jubot added successfully to Eyal', 'status': 200})
 
+
     def test_balance(self, info = basic_user_info):
         """
         Test balance functionality
@@ -49,6 +52,7 @@ class Tests(unittest.TestCase):
             req = tester.post('/balance', json = balance_credentials)
         self.assertEqual(req.status_code, 200)
         return req.get_json()
+
 
     def test_transfer(self, info = basic_user_info):
         """
@@ -64,20 +68,20 @@ class Tests(unittest.TestCase):
         self.assertEqual(amount_before - amount_after, 100)
         self.assertEqual(req.status_code, 200)
 
+
     def test_takeLoan(self, info = basic_user_info):
         """
         Test loan getting
         """
         transfer_credentials = info.copy()
         transfer_credentials["amount"] = 100
-        bank_balance_before = self.test_balance(bank_info)["Own"]
         amount_before = self.test_balance()["Own"]
         with app.test_client(self) as tester:
             req = tester.post('/takeloan', json = transfer_credentials)
-        bank_balance_after = self.test_balance(bank_info)["Own"]
         amount_after = self.test_balance()["Own"]
         self.assertEqual(amount_after - amount_before, 100)
         self.assertEqual(req.status_code, 200)
+
 
     def test_payLoan(self, info = basic_user_info):
         """
@@ -86,13 +90,12 @@ class Tests(unittest.TestCase):
         transfer_credentials = info.copy()
         transfer_credentials["amount"] = 100
         user_debt_before = self.test_balance()["Debt"]
-        bank_balance_before = self.test_balance(bank_info)["Own"]
         with app.test_client(self) as tester:
             req = tester.post('/payloan', json = transfer_credentials)
         user_debt_after = self.test_balance()["Debt"]
-        bank_balance_after = self.test_balance(bank_info)["Own"]
         self.assertEqual(req.status_code, 200)
         self.assertEqual(user_debt_before - user_debt_after, int(transfer_credentials["amount"]))
+
 
     def test_leaving(self, info = basic_user_info):
         """
@@ -107,3 +110,4 @@ class Tests(unittest.TestCase):
 
 if __name__=="__main__":
     unittest.main()
+    
