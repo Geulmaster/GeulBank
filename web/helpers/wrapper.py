@@ -1,12 +1,18 @@
 from pymongo import MongoClient
 import bcrypt
+from configparser import ConfigParser
+from pathlib import Path
 
-from GeulBank.web.helpers import config_reader
+def config_reader():
+    config_file = Path(__file__).parent / 'config.ini'
+    parser = ConfigParser()
+    parser.read(config_file)
+    return parser
 
 credentials = config_reader()["CREDENTIALS"]
 
 def collection():
-    client = MongoClient("mongodb://localhost:27017") #geulbank_db_1 instead localhost
+    client = MongoClient("mongodb://0.0.0.0:27017") #geulbank_db_1 instead localhost
     # more secure connection: MongoClient('mongodb://username:password@hostname:27017/')
     db = client[credentials["DB"]]
     users = db[credentials["Collection"]]

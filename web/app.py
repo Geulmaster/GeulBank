@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_restful import Api, Resource
-
-from GeulBank.web.helpers import wrapper
-from GeulBank.web.actions import resources
+from actions import resources
 
 app = Flask(__name__)
 api = Api(app)
